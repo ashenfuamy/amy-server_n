@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: amy-server-admin
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 550MB
