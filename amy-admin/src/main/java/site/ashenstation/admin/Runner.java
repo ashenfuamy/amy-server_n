@@ -7,10 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
 @Slf4j
 @MapperScan("site.ashenstation.mapper")
 @EnableTransactionManagement
+@SpringBootApplication(
+        scanBasePackages = "site.ashenstation"
+)
 public class Runner {
 
     public static void main(String[] args) {

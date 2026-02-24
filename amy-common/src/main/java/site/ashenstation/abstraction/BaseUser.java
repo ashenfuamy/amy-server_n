@@ -16,4 +16,7 @@ public abstract class BaseUser {
     private String avatarPath;
     private Date lastLogin;
     private Boolean locked;
+    private Boolean expired;
+    private Boolean credentialsExpired;
+    private Boolean enabled;
 }
