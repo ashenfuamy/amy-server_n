@@ -13,7 +13,7 @@ public abstract class BaseUser {
     private String username;
     @ColumnMask(Masks.PASSWORD)
     private String password;
-    private String avatarPath;
-    private Date lastLogin;
+    private String avatar;
+    private Date lastLoginAt;
     private Boolean locked;
 }

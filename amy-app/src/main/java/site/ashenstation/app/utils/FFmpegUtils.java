@@ -1,4 +1,4 @@
-package site.ashenstation.utils;
+package site.ashenstation.app.utils;
 
 import cn.hutool.core.io.file.FileNameUtil;
 import lombok.RequiredArgsConstructor;
