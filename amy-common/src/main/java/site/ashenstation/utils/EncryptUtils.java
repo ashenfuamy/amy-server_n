@@ -1,5 +1,8 @@
 package site.ashenstation.utils;
 
+import cn.hutool.core.util.IdUtil;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -71,5 +74,10 @@ public class EncryptUtils {
             b2[n / 2] = (byte) Integer.parseInt(item, 16);
         }
         return b2;
+    }
+
+    public static void main(String[] args) {
+        String s = IdUtil.fastSimpleUUID();
+        System.out.println(s);
     }
 }

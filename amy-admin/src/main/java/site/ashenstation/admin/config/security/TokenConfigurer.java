@@ -1,40 +1,21 @@
 package site.ashenstation.admin.config.security;
 
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
-import site.ashenstation.exception.JwtTokenException;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import site.ashenstation.utils.TokenProvider;
 
-import java.io.IOException;
-
+@Configuration
 @RequiredArgsConstructor
-public class TokenConfigurer extends GenericFilterBean {
-
+public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     private final TokenProvider tokenProvider;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-
-        String token = tokenProvider.resolveToken(httpServletRequest);
-
-        if (StringUtils.hasText(token)) {
-            if (tokenProvider.isTokenExpired(token)) {
-                throw new JwtTokenException();
-            }
-
-            Claims claims = tokenProvider.getClaims(token);
-
-            
-        }
-
-        filterChain.doFilter(httpServletRequest, servletResponse);
+    public void configure(HttpSecurity builder) {
+        TokenFilter tokenFilter = new TokenFilter(tokenProvider);
+        builder.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -31,7 +31,6 @@ public class UserDetailService implements UserDetailsService {
 
             jwtUserDto = new JwtUserDto(adminUser);
             userCacheManager.addUserCache(username, jwtUserDto);
-
         }
 
 
