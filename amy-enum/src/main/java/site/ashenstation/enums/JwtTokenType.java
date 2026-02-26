@@ -5,16 +5,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum LoginPlatform {
-
-    CLIENT("client"),
-    BROWSER("browser"),
-    MOBILE("mobile");
+public enum JwtTokenType {
+    LOGIN("1"),
+    Authorization("2");
 
     private final String type;
 
-    public static LoginPlatform find(String type) {
-        for (LoginPlatform value : LoginPlatform.values()) {
+    public static JwtTokenType find(String type) {
+        for (JwtTokenType value : JwtTokenType.values()) {
             if (value.getType().equals(type)) {
                 return value;
             }

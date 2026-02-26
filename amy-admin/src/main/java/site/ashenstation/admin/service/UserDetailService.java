@@ -10,7 +10,7 @@ import site.ashenstation.admin.dto.JwtUserDto;
 import site.ashenstation.entity.AdminUser;
 import site.ashenstation.entity.table.AdminUserTableDef;
 import site.ashenstation.mapper.AdminUserMapper;
-import site.ashenstation.utils.UserCacheManager;
+import site.ashenstation.service.UserCacheManager;
 
 @Service
 @RequiredArgsConstructor

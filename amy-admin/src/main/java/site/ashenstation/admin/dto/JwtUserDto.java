@@ -1,5 +1,7 @@
 package site.ashenstation.admin.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +12,10 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Data
 public class JwtUserDto implements UserDetails, Serializable {
-    private final AdminUser adminUser;
-
+    private AdminUser adminUser;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -21,31 +24,31 @@ public class JwtUserDto implements UserDetails, Serializable {
 
     @Override
     public String getPassword() {
-        return "";
+        return adminUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return adminUser.getUsername();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return !adminUser.getExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return !adminUser.getLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return !adminUser.getCredentialsExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return adminUser.getEnabled();
     }
 }

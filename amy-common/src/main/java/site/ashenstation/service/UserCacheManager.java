@@ -1,4 +1,4 @@
-package site.ashenstation.utils;
+package site.ashenstation.service;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import site.ashenstation.properties.LoginProperties;
+import site.ashenstation.utils.RedisUtils;
 
 @Service
 @RequiredArgsConstructor

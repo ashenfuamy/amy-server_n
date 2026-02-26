@@ -6,5 +6,7 @@ public class AmyConstants {
     public static String JWT_CLAIM_TOKEN_TYPE = "type";
     public static String JWT_CLAIM_UID = "uid";
 
+    public static String JWT_CLAIM_CREATOR_ID = "tokenId";
+
     public static String JWT_CLAIM_PERMISSION = "permission";
 }

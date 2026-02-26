@@ -1,4 +1,5 @@
 package site.ashenstation.utils;
+
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import io.jsonwebtoken.*;
@@ -27,8 +28,6 @@ public class TokenProvider implements InitializingBean {
     private JwtBuilder jwtBuilder;
     private final RedisUtils redisUtils;
     private final SecurityProperties securityProperties;
-
-    public static final String AUTHORITIES_UUID_KEY = "uid";
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -118,7 +117,7 @@ public class TokenProvider implements InitializingBean {
      */
     public String getId(String token) {
         Claims claims = getClaims(token);
-        return claims.get(AUTHORITIES_UUID_KEY, String.class);
+        return claims.get(AmyConstants.JWT_CLAIM_UID, String.class);
     }
 
     /**
