@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import site.ashenstation.dto.JwtUserDto;
+import site.ashenstation.admin.dto.JwtUserDto;
 import site.ashenstation.entity.AdminUser;
 import site.ashenstation.entity.table.AdminUserTableDef;
 import site.ashenstation.mapper.AdminUserMapper;
@@ -21,7 +21,7 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        JwtUserDto jwtUserDto = userCacheManager.getUserCache(username);
+        JwtUserDto jwtUserDto = (JwtUserDto) userCacheManager.getUserCache(username);
 
         if (jwtUserDto == null) {
             AdminUser adminUser = MaskManager.execWithoutMask(() -> adminUserMapper.selectOneByCondition(AdminUserTableDef.ADMIN_USER.USERNAME.eq(username)));
@@ -32,7 +32,6 @@ public class UserDetailService implements UserDetailsService {
             jwtUserDto = new JwtUserDto(adminUser);
             userCacheManager.addUserCache(username, jwtUserDto);
         }
-
 
         return jwtUserDto;
     }

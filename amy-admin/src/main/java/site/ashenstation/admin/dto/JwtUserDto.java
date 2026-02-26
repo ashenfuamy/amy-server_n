@@ -1,20 +1,17 @@
-package site.ashenstation.dto;
+package site.ashenstation.admin.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import site.ashenstation.abstraction.BaseUser;
+import site.ashenstation.entity.AdminUser;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JwtUserDto implements UserDetails, Serializable {
-
-    private final BaseUser user;
+    private final AdminUser adminUser;
 
 
     @Override
@@ -24,31 +21,31 @@ public class JwtUserDto implements UserDetails, Serializable {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return "";
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return "";
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return !user.getExpired();
+        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !user.getLocked();
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !user.getCredentialsExpired();
+        return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return !user.getEnabled();
+        return UserDetails.super.isEnabled();
     }
 }

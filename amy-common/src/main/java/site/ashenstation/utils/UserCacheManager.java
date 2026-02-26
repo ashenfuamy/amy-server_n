@@ -4,8 +4,8 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import site.ashenstation.dto.JwtUserDto;
 import site.ashenstation.properties.LoginProperties;
 
 @Service
@@ -20,16 +20,17 @@ public class UserCacheManager {
      * @param userName 用户名
      * @return JwtUserDto
      */
-    public JwtUserDto getUserCache(String userName) {
+    public UserDetails getUserCache(String userName) {
         if (StrUtil.isNotEmpty(userName)) {
             // 获取数据
             Object obj = redisUtils.get(LoginProperties.cacheKey + userName);
             if (obj != null) {
-                return (JwtUserDto) obj;
+                return (UserDetails) obj;
             }
         }
         return null;
     }
+
 
     /**
      * 添加缓存到Redis
@@ -37,7 +38,7 @@ public class UserCacheManager {
      * @param userName 用户名
      */
     @Async
-    public void addUserCache(String userName, JwtUserDto user) {
+    public void addUserCache(String userName, UserDetails user) {
         if (StrUtil.isNotEmpty(userName)) {
             // 添加数据, 避免数据同时过期
             long time = loginProperties.getUserCacheIdleTime() + RandomUtil.randomInt(900, 1800);
