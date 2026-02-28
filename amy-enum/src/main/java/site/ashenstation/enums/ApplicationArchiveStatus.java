@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ApplicationArchiveStatus {
 
-    Authorization("2");
+    TO_BE_RELEASED(0),
+    RELEASED(1);
 
-    private final String type;
+    private final Integer type;
 }

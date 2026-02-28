@@ -1,5 +1,6 @@
 package site.ashenstation.admin.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public class ApplicationArchiveController {
     private final ApplicationArchiveService applicationArchiveService;
 
     @AnonymousPostMapping("publish")
-    public void publish(@RequestBody PublishApplicationArchiveDto dto) {
+    public void publish(@Valid PublishApplicationArchiveDto dto) {
         applicationArchiveService.publish(dto);
     }
 }

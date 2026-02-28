@@ -10,3 +10,9 @@ jwt:
 
 login:
   single-login: true
+
+application-archive:
+  root-path: D:\amy\res
+  uri-path: /archive
+  applications:
+    - { name: 'amy', directory: 'amy' }

@@ -38,6 +38,11 @@ public class GlobalExceptionHandler {
         return GlobalExceptionHandler.buildResponseEntity(ApiError.error(e.getMessage()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+        return GlobalExceptionHandler.buildResponseEntity(ApiError.error(e.getMessage()));
+    }
+
     private static ResponseEntity<ApiError> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }

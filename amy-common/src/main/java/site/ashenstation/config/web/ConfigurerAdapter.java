@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageCo
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -13,6 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import site.ashenstation.converter.ApplicationArchivePlatformConverter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ import java.util.List;
 @EnableWebMvc
 @RequiredArgsConstructor
 public class ConfigurerAdapter implements WebMvcConfigurer {
+
+    private final ApplicationArchivePlatformConverter applicationArchivePlatformConverter;
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -48,5 +53,10 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         converter.setSupportedMediaTypes(supportMediaTypeList);
         converter.setDefaultCharset(StandardCharsets.UTF_8);
         converters.add(converter);
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(applicationArchivePlatformConverter);
     }
 }
