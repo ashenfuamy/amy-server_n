@@ -19,6 +19,8 @@ public class PublishApplicationArchiveDto {
     private String name;
     @NotNull(message = "应用版本不能为空")
     private String version;
+    @NotNull(message = "应用包名不能为空")
+    private String packageName;
     private Boolean replaceExisting = false;
     private Boolean setToLatest = false;
     @NotNull(message = "应用归档文件不能为空")

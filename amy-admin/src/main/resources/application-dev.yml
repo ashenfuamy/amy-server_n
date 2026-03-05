@@ -12,7 +12,7 @@ login:
   single-login: true
 
 application-archive:
-  root-path: D:\amy\res
-  uri-path: /archive
+  root-path: F:\workspace\amy\resource\application-archive
+  uri-path: /static/arch
   applications:
     - { name: 'amy', directory: 'amy' }

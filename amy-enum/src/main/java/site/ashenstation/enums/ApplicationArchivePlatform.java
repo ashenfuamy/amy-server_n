@@ -1,15 +1,17 @@
 package site.ashenstation.enums;
 
+import com.mybatisflex.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public enum ApplicationArchivePlatform {
-    WIN("win"),
+    WIN("win32"),
     LINUX("linux"),
     MAC("mac");
 
+    @EnumValue
     private final String type;
 
     // 核心：根据字符串值（忽略大小写）匹配枚举

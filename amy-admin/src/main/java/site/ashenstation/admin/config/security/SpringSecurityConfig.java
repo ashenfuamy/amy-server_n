@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+import site.ashenstation.admin.config.properties.ApplicationArchiveProperties;
 import site.ashenstation.config.security.JwtAccessDeniedHandler;
 import site.ashenstation.config.security.JwtAuthenticationEntryPoint;
 import site.ashenstation.enums.RequestMethodEnum;
@@ -37,6 +38,7 @@ public class SpringSecurityConfig {
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final ApplicationArchiveProperties applicationArchiveProperties;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -53,6 +55,7 @@ public class SpringSecurityConfig {
     protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         Map<String, Set<String>> anonymousUrls = AnonTagUtils.getAnonymousUrl(applicationContext);
+
 
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
@@ -74,8 +77,8 @@ public class SpringSecurityConfig {
                                     "/swagger-resources/**",
                                     "/webjars/**",
                                     "/amy/version/**",
-                                    "/static/arch/**"
-//                                    fileProperties.getPublishResourcePrefix() + "/**"
+                                    "/static/arch/**",
+                                    applicationArchiveProperties.getUriPath() + "/**"
                             ).permitAll()
                             .requestMatchers("/api/version/amy/publish").permitAll()
                             .anyRequest().authenticated();

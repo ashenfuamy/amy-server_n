@@ -1,6 +1,7 @@
-package site.ashenstation.properties;
+package site.ashenstation.admin.config.properties;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,6 +14,7 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "application-archive")
 public class ApplicationArchiveProperties implements InitializingBean {
+    @Getter
     private static String rootPath;
     private String uriPath;
     private List<Application> applications;
