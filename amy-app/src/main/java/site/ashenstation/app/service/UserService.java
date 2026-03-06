@@ -1,22 +1,33 @@
 package site.ashenstation.app.service;
 
+import cn.hutool.core.util.IdUtil;
+import com.mybatisflex.core.util.UpdateEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import site.ashenstation.app.dto.JwtUserDto;
 import site.ashenstation.app.vo.AuthResVo;
 import site.ashenstation.dto.AuthByUsernamePasswordDto;
+import site.ashenstation.entity.AppUser;
 import site.ashenstation.entity.AppUserResourcePermission;
 import site.ashenstation.entity.table.AppUserResourcePermissionTableDef;
+import site.ashenstation.enums.LoginPlatform;
+import site.ashenstation.exception.BadRequestException;
+import site.ashenstation.mapper.AppUserMapper;
 import site.ashenstation.mapper.AppUserResourcePermissionMapper;
+import site.ashenstation.properties.LoginProperties;
+import site.ashenstation.properties.RsaProperties;
 import site.ashenstation.properties.SecurityProperties;
-import site.ashenstation.utils.RedisUtils;
+import site.ashenstation.service.OnlineUserService;
+import site.ashenstation.utils.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +36,11 @@ public class UserService {
     private final RedisUtils redisUtils;
     private final AppUserResourcePermissionMapper appUserResourcePermissionMapper;
     private final SecurityProperties securityProperties;
+    private final AuthenticationManager authenticationManager;
+    private final TokenProvider tokenProvider;
+    private final AppUserMapper appUserMapper;
+    private final OnlineUserService onlineUserService;
+    private final LoginProperties loginProperties;
 
     public List<GrantedAuthority> getResourcePermission(String username) {
         String key = securityProperties.getResourcePermissionKey() + username;
@@ -42,7 +58,7 @@ public class UserService {
             );
 
             appUserResourcePermissions.forEach(i -> {
-                if (i.getExpire() == null || new Date().before(i.getExpire())) {
+                if (i.getExpireAt() == null || new Date().before(i.getExpireAt())) {
                     String resourceId = i.getResourceId();
                     permissions.add(new SimpleGrantedAuthority(resourceId));
                     redisUtils.set(key, resourceId);
@@ -54,8 +70,51 @@ public class UserService {
     }
 
     public AuthResVo loginByUsernamePassword(AuthByUsernamePasswordDto dto, HttpServletRequest request) {
+        String password;
 
-        return new AuthResVo();
+        try {
+            password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, dto.getPassword());
+        } catch (Exception e) {
+            throw new BadRequestException("密码错误");
+        }
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+                = new UsernamePasswordAuthenticationToken(dto.getUsername(), password);
+
+        Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+        JwtUserDto jwtUserDto = (JwtUserDto) authenticate.getPrincipal();
+
+        AppUser appUser = jwtUserDto.getAppUser();
+        appUser.setPassword(null);
+
+        HashMap<String, String> claims = new HashMap<>() {{
+            put(AmyConstants.JWT_CLAIM_USERNAME, dto.getUsername());
+            put(AmyConstants.JWT_CLAIM_USER_ID, appUser.getId());
+            put(AmyConstants.JWT_CLAIM_UID, IdUtil.fastSimpleUUID());
+        }};
+
+        String token = tokenProvider.createToken(appUser.getUsername(), claims, securityProperties.getTokenValidityInSeconds());
+        AppUser updateAppUser = UpdateEntity.of(AppUser.class, appUser.getId());
+
+        updateAppUser.setLastLoginAt(new Date());
+        String ip = IpAddrUtils.getIp(request);
+
+        updateAppUser.setLastLoginIp(ip);
+
+        appUserMapper.update(updateAppUser);
+
+        LoginPlatform loginPlatform = LoginPlatform.find(request.getHeader(securityProperties.getClientHeader()));
+
+        if (loginProperties.isSingleLogin()) {
+            assert loginPlatform != null;
+            onlineUserService.kickOutForUsernameAndPlatform(appUser.getUsername(), loginPlatform);
+        }
+
+        onlineUserService.save(appUser.getUsername(), token, request, loginPlatform);
+
+        return new AuthResVo(token, appUser);
     }
 
 }

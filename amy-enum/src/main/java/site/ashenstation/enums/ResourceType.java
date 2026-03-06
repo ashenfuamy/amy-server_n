@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ResourceType {
 
-    GET("PICTURE");
+    PICTURE("PICTURE");
 
     private final String type;
 

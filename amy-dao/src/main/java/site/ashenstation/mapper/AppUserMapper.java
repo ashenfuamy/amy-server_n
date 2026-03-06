@@ -1,4 +1,7 @@
 package site.ashenstation.mapper;
 
-public interface AppUserMapper {
+import com.mybatisflex.core.BaseMapper;
+import site.ashenstation.entity.AppUser;
+
+public interface AppUserMapper extends BaseMapper<AppUser> {
 }

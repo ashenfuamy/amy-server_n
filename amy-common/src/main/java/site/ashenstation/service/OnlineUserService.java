@@ -43,7 +43,7 @@ public class OnlineUserService {
         }
     }
 
-    public void save(String username, String token, HttpServletRequest request, Boolean byPlatform) {
+    public void save(String username, String token, HttpServletRequest request, LoginPlatform loginPlatform) {
         String ip = IpAddrUtils.getIp(request);
         String address = IpAddrUtils.getCityInfo(ip);
         OnlineUserDto onlineUserDto;
@@ -55,7 +55,7 @@ public class OnlineUserService {
             onlineUserDto.setAddress(address);
             onlineUserDto.setLoginTime(new Date());
 
-            onlineUserDto.setLoginPlatform(LoginPlatform.find(request.getHeader(securityProperties.getClientHeader())));
+            onlineUserDto.setLoginPlatform(loginPlatform);
 
             String loginKey = tokenProvider.loginKey(token, onlineUserDto.getLoginPlatform());
 

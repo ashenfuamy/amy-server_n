@@ -18,6 +18,7 @@ public class Runner {
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(Runner.class);
         springApplication.addListeners(new ApplicationPidFileWriter());
+        springApplication.setAllowCircularReferences(true); // 允许循环依赖
         springApplication.run(args);
     }
 

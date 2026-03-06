@@ -31,3 +31,17 @@ spring:
           min-idle: 2
           # 最大等待时间（获取连接时的最长等待时间，单位毫秒，-1表示无限制）
           max-wait: 1000ms
+
+static-resource:
+  user-avatar-root: D:\workspace\resource\user-avatar
+  user-avatar-resource-prefix: /resource/user-avatar
+  avatar-root: D:\workspace\resource\avatar
+  avatar-resource-prefix: /resource/avatar
+  poster-root: D:\workspace\resource\poster
+  poster-resource-prefix: /resource/poster
+  image-ext: .webp
+  upload-cache-key: 'upload-file:'
+  video-roots:
+    - { name: 'no.1', path: D:\workspace\resource\v }
+  enable-video-root: 'no.1'
+  video-resource-prefix: /resource/video

@@ -8,6 +8,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,11 +27,15 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
-@RequiredArgsConstructor
 @Configuration
 public class TokenFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
+
+    public TokenFilter(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

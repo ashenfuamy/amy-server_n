@@ -17,5 +17,5 @@ public class AppUserResourcePermission {
     private String resourceId;
     private String userId;
     private ResourceType resourceType;
-    private Date expire;
+    private Date expireAt;
 }
