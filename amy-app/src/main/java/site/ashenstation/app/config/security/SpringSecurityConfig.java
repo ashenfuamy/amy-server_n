@@ -75,7 +75,9 @@ public class SpringSecurityConfig {
                                     "/swagger-resources/**",
                                     "/webjars/**",
                                     "/amy/version/**",
-                                    "/static/arch/**"
+                                    "/static/arch/**",
+                                    "/ws",
+                                    "/ws/**"
                             ).permitAll()
                             .requestMatchers("/api/version/amy/publish").permitAll()
                             .anyRequest().authenticated();
