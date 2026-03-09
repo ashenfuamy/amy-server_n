@@ -32,6 +32,14 @@ spring:
           # 最大等待时间（获取连接时的最长等待时间，单位毫秒，-1表示无限制）
           max-wait: 1000ms
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
 static-resource:
   user-avatar-root: D:\workspace\resource\user-avatar
   user-avatar-resource-prefix: /resource/user-avatar

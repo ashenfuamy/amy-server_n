@@ -1,5 +1,7 @@
 package site.ashenstation.admin.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,13 @@ import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
+@Tag(name = "应用版本管理", description = "所有应用版本管理的接口")
 public class ApplicationArchiveController {
     private final ApplicationArchiveService applicationArchiveService;
 
     @ResponseBody
     @AnonymousPostMapping("/api/archive/publish")
+    @Operation(summary = "版本发布")
     public ResponseEntity<Boolean> publish(@Valid PublishApplicationArchiveDto dto) {
         return ResponseEntity.ok(applicationArchiveService.publish(dto));
     }
