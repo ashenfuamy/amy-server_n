@@ -27,6 +27,12 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public void handleRuntimeException(RuntimeException e) {
+        // 打印异常栈（便于排查问题）
+        e.printStackTrace();
+    }
+
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestException(BadRequestException ex) {

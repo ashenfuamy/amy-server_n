@@ -30,6 +30,7 @@ public class ApplicationArchiveController {
     }
 
     @AnonymousGetMapping("/{application}/{platform}/{arch}/{archive}")
+    @Operation(summary = "获取版本路劲")
     public void archiveFilePath(@PathVariable String application, @PathVariable String platform, @PathVariable String arch, @PathVariable String archive, HttpServletResponse response) throws IOException {
         String archiveFilePath = applicationArchiveService.getArchiveFilePath(application, platform, arch, archive);
         response.sendRedirect(archiveFilePath);
