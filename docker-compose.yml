@@ -11,3 +11,4 @@ services:
       - /volume1/.amy_station/avatar:/amy/avatar
       - /volume1/.amy_station/public:/amy/public
       - /volume1/.amy_station/video:/amy/video_1
+      - /volume1/.amy_station/user-avatar:/amy/user-avatar
