@@ -1,6 +1,5 @@
 package site.ashenstation.utils;
 
-import cn.hutool.core.util.IdUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.crypto.Cipher;
@@ -77,7 +76,7 @@ public class EncryptUtils {
     }
 
     public static void main(String[] args) {
-        String s = IdUtil.fastSimpleUUID();
-        System.out.println(s);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        System.out.println(encoder.encode("Lyuanshen520."));
     }
 }
