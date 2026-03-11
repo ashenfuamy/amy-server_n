@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import site.ashenstation.enums.LoginPlatform;
@@ -16,6 +18,7 @@ import site.ashenstation.properties.SecurityProperties;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -153,6 +156,23 @@ public class TokenProvider implements InitializingBean {
             return bearerToken.replace(securityProperties.getTokenStartWith(), "");
         } else {
             log.debug("非法Token：{}", bearerToken);
+        }
+        return null;
+    }
+
+    public String resolveToken(ServerHttpRequest request) {
+        HttpHeaders headers = request.getHeaders();
+        List<String> bearerTokens = headers.get(securityProperties.getHeader());
+        assert bearerTokens != null;
+        if (bearerTokens.size() == 1) {
+            String bearerToken = bearerTokens.get(0);
+
+            if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(securityProperties.getTokenStartWith())) {
+                // 去掉令牌前缀
+                return bearerToken.replace(securityProperties.getTokenStartWith(), "");
+            } else {
+                log.debug("非法Token：{}", bearerToken);
+            }
         }
         return null;
     }

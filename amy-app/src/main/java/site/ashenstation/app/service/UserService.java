@@ -2,8 +2,10 @@ package site.ashenstation.app.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.mybatisflex.core.util.UpdateEntity;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,6 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
+import site.ashenstation.app.config.websocket.WebSocketHandler;
 import site.ashenstation.app.dto.JwtUserDto;
 import site.ashenstation.app.vo.AuthResVo;
 import site.ashenstation.dto.AuthByUsernamePasswordDto;
@@ -29,6 +33,7 @@ import site.ashenstation.utils.*;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -89,10 +94,14 @@ public class UserService {
         AppUser appUser = jwtUserDto.getAppUser();
         appUser.setPassword(null);
 
+        LoginPlatform loginPlatform = LoginPlatform.find(request.getHeader(securityProperties.getClientHeader()));
+
         HashMap<String, String> claims = new HashMap<>() {{
             put(AmyConstants.JWT_CLAIM_USERNAME, dto.getUsername());
             put(AmyConstants.JWT_CLAIM_USER_ID, appUser.getId());
             put(AmyConstants.JWT_CLAIM_UID, IdUtil.fastSimpleUUID());
+            assert loginPlatform != null;
+            put(AmyConstants.JWT_CLAIM_PLATFORM, loginPlatform.getType());
         }};
 
         String token = tokenProvider.createToken(appUser.getUsername(), claims, securityProperties.getTokenValidityInSeconds());
@@ -105,8 +114,6 @@ public class UserService {
 
         appUserMapper.update(updateAppUser);
 
-        LoginPlatform loginPlatform = LoginPlatform.find(request.getHeader(securityProperties.getClientHeader()));
-
         if (loginProperties.isSingleLogin()) {
             assert loginPlatform != null;
             onlineUserService.kickOutForUsernameAndPlatform(appUser.getUsername(), loginPlatform);
@@ -117,4 +124,32 @@ public class UserService {
         return new AuthResVo(token, appUser);
     }
 
+    public AppUser getInfo() {
+        JwtUserDto jwtUser = (JwtUserDto) SecurityUtils.getCurrentUser();
+        AppUser appUser = jwtUser.getAppUser();
+
+        appUser.setPassword(null);
+        return appUser;
+    }
+
+    public Boolean logout(HttpServletRequest request) {
+        String token = tokenProvider.resolveToken(request);
+
+        LoginPlatform loginPlatform = LoginPlatform.find(request.getHeader(securityProperties.getClientHeader()));
+
+        onlineUserService.logout(token, loginPlatform);
+
+        Claims claims = tokenProvider.getClaims(token);
+        String uid = claims.get(AmyConstants.JWT_CLAIM_UID, String.class);
+        String userId = claims.get(AmyConstants.JWT_CLAIM_USER_ID, String.class);
+
+        try {
+            WebSocketSession webSocketSession = WebSocketHandler.ONLINE_SESSIONS.get(userId + ":" + uid);
+            WebSocketHandler.ONLINE_SESSIONS.remove(userId + ":" + uid);
+            webSocketSession.close();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return true;
+    }
 }

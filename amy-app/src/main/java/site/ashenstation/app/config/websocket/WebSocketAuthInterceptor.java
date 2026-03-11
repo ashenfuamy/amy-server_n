@@ -1,18 +1,25 @@
 package site.ashenstation.app.config.websocket;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
+import site.ashenstation.enums.LoginPlatform;
 import site.ashenstation.properties.SecurityProperties;
+import site.ashenstation.service.OnlineUserService;
+import site.ashenstation.utils.AmyConstants;
+import site.ashenstation.utils.SecurityUtils;
 import site.ashenstation.utils.TokenProvider;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -23,14 +30,22 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 
-        System.out.println("beforeHandshake");
+        String token = tokenProvider.resolveToken(request);
 
-//        HttpServletRequest servletRequest = (HttpServletRequest) request;
-////        String token = tokenProvider.resolveToken(servletRequest);
-////        if (StringUtils.hasText(token)) {
-////            response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
-////            return false;
-////        }
+        if (token == null) {
+            response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+            return false;
+        }
+
+        Claims claims = tokenProvider.getClaims(token);
+        String uid = claims.get(AmyConstants.JWT_CLAIM_UID, String.class);
+        String userId = claims.get(AmyConstants.JWT_CLAIM_USER_ID, String.class);
+        String username = claims.get(AmyConstants.JWT_CLAIM_USERNAME, String.class);
+
+        attributes.put("uid", uid);
+        attributes.put("userId", userId);
+        attributes.put("username", username);
+
         return true;
     }
 

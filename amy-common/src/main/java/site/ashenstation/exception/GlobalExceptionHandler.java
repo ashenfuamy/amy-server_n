@@ -26,14 +26,7 @@ public class GlobalExceptionHandler {
         return GlobalExceptionHandler.buildResponseEntity(ApiError.error(HttpStatus.BAD_REQUEST, errors.getFirst()));
 
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public void handleRuntimeException(RuntimeException e) {
-        // 打印异常栈（便于排查问题）
-        e.printStackTrace();
-    }
-
-
+    
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestException(BadRequestException ex) {
         return GlobalExceptionHandler.buildResponseEntity(ApiError.error(ex.getMessage()));

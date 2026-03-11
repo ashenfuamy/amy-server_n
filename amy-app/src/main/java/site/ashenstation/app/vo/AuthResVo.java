@@ -8,5 +8,5 @@ import site.ashenstation.entity.AppUser;
 @AllArgsConstructor
 public class AuthResVo {
     private String token;
-    private AppUser adminUser;
+    private AppUser user;
 }

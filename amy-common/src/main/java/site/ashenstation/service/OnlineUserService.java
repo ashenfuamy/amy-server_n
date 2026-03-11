@@ -76,6 +76,12 @@ public class OnlineUserService {
         redisUtils.del(loginKey);
     }
 
+    public void logout(String token, LoginPlatform loginPlatform) {
+        String loginKey = tokenProvider.loginKey(token, loginPlatform);
+        redisUtils.del(loginKey);
+    }
+
+
     /**
      * 查询用户
      *

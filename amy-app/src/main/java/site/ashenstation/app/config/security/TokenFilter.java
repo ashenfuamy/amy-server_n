@@ -17,12 +17,16 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import site.ashenstation.app.service.UserService;
+import site.ashenstation.dto.OnlineUserDto;
+import site.ashenstation.enums.LoginPlatform;
 import site.ashenstation.exception.BadRequestException;
+import site.ashenstation.service.OnlineUserService;
 import site.ashenstation.utils.AmyConstants;
 import site.ashenstation.utils.TokenProvider;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
@@ -30,11 +34,14 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @Configuration
 public class TokenFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
+    private final OnlineUserService onlineUserService;
+
     @Autowired
     private UserService userService;
 
-    public TokenFilter(TokenProvider tokenProvider) {
+    public TokenFilter(TokenProvider tokenProvider, OnlineUserService onlineUserService) {
         this.tokenProvider = tokenProvider;
+        this.onlineUserService = onlineUserService;
     }
 
     @Override
@@ -45,16 +52,21 @@ public class TokenFilter extends GenericFilterBean {
 
         if (StringUtils.hasText(token)) {
 
-            if (tokenProvider.isTokenExpired(token)) {
-                throw new BadRequestException(UNAUTHORIZED, "Token expired");
-            }
-
             Claims claims = tokenProvider.getClaims(token);
             String username = claims.get(AmyConstants.JWT_CLAIM_USERNAME, String.class);
-            List<GrantedAuthority> resourcePermission = userService.getResourcePermission(username);
 
-            User principal = new User(claims.getSubject(), "******", resourcePermission);
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, token, resourcePermission));
+            String platformVal = claims.get(AmyConstants.JWT_CLAIM_PLATFORM, String.class);
+            String loginKey = tokenProvider.loginKey(token, Objects.requireNonNull(LoginPlatform.find(platformVal)));
+
+            OnlineUserDto onlineUserDto = onlineUserService.getOne(loginKey);
+
+            if (onlineUserDto != null) {
+                List<GrantedAuthority> resourcePermission = userService.getResourcePermission(username);
+
+                User principal = new User(claims.getSubject(), "******", resourcePermission);
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, token, resourcePermission));
+            }
+
         }
 
         chain.doFilter(request, response);
