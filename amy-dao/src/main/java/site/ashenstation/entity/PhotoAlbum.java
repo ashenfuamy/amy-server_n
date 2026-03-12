@@ -9,14 +9,14 @@ import site.ashenstation.abstraction.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-@Table("mda_actor")
-public class Actor extends BaseEntity {
-    private String name;
-    private String tagId;
-    private String introduction;
-    private String avatarPath;
-    private String avatarUrl;
-    private String website;
-    private String country;
+@Table("mda_photo_album")
+public class PhotoAlbum extends BaseEntity {
+    private String title;
+    private String subtitle;
+    private String actorId;
+    private String posterUrl;
+    private String posterPath;
     private String resourceId;
+    private String folderPath;
+    private String url;
 }

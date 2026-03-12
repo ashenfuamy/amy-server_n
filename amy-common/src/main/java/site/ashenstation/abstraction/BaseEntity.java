@@ -1,5 +1,6 @@
 package site.ashenstation.abstraction;
 
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.core.keygen.KeyGenerators;
@@ -15,14 +16,15 @@ public abstract class BaseEntity {
     @Id(keyType = KeyType.Generator, value = KeyGenerators.uuid)
     private String id;
     private Date createdAt;
-    private String createBy;
+    @Column("create_by")
+    private String creator;
 
     public BaseEntity() {
         String currentUserId = SecurityUtils.getCurrentUserId();
         if (currentUserId == null)
-            this.createBy = "System";
+            this.creator = "System";
         else
-            this.createBy = SecurityUtils.getCurrentUserId();
+            this.creator = SecurityUtils.getCurrentUserId();
         this.createdAt = new Date();
     }
 }
