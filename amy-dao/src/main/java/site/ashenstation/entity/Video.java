@@ -13,5 +13,9 @@ import site.ashenstation.abstraction.BaseEntity;
 public class Video extends BaseEntity {
     private String summaryId;
     private Long size;
-    
+    private String filePath;
+    private String fileUrl;
+    private String folderPath;
+    private String seriesId;
+    private Long duration;
 }

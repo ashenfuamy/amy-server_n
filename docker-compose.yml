@@ -12,3 +12,16 @@ services:
       - /volume1/.amy_station/public:/amy/public
       - /volume1/.amy_station/video:/amy/video_1
       - /volume1/.amy_station/user-avatar:/amy/user-avatar
+
+  app-server:
+    image: amy-app-server:latest
+    network_mode: host
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /volume1/.amy_station/archive:/amy/archive
+      - /volume1/.amy_station/poster:/amy/poster
+      - /volume1/.amy_station/avatar:/amy/avatar
+      - /volume1/.amy_station/public:/amy/public
+      - /volume1/.amy_station/video:/amy/video_1
+      - /volume1/.amy_station/user-avatar:/amy/user-avatar
