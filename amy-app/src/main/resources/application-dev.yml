@@ -1,6 +1,10 @@
 spring:
   config:
     import: optional:classpath:/application-dev-common.yml
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 550MB
 
 ffmpeg:
   ffmpeg-executor-path: D:\workspace\resource\ffmpeg-n8.0-latest-win64-gpl-8.0\bin\ffmpeg.exe

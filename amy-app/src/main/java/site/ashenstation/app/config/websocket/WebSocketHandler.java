@@ -30,7 +30,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        System.out.println("handleTextMessage:" + message.getPayload());
+//        System.out.println("handleTextMessage:" + message.getPayload());
 
         if (message.getPayload().equals("ping")) {
             session.sendMessage(new TextMessage("pong"));

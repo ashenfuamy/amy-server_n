@@ -18,4 +18,10 @@ public class AppUserResourcePermission {
     private String userId;
     private ResourceType resourceType;
     private Date expireAt;
+
+    public AppUserResourcePermission(String resourceId, String userId, ResourceType resourceType) {
+        this.resourceId = resourceId;
+        this.userId = userId;
+        this.resourceType = resourceType;
+    }
 }
