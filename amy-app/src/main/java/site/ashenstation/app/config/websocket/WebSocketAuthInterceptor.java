@@ -1,25 +1,17 @@
 package site.ashenstation.app.config.websocket;
 
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
-import site.ashenstation.enums.LoginPlatform;
-import site.ashenstation.properties.SecurityProperties;
-import site.ashenstation.service.OnlineUserService;
 import site.ashenstation.utils.AmyConstants;
-import site.ashenstation.utils.SecurityUtils;
 import site.ashenstation.utils.TokenProvider;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor

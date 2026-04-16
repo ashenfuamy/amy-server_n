@@ -1,15 +1,18 @@
 package site.ashenstation.app.service;
 
 import cn.hutool.core.util.IdUtil;
+import com.mybatisflex.core.query.QueryChain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ashenstation.app.dto.CreateActorDto;
+import site.ashenstation.app.vo.ActorListByClassifyTagVo;
 import site.ashenstation.entity.Actor;
 import site.ashenstation.entity.ActorTag;
 import site.ashenstation.entity.AppUserResourcePermission;
 import site.ashenstation.entity.table.ActorTableDef;
+import site.ashenstation.entity.table.ActorTagTableDef;
 import site.ashenstation.enums.ResourceType;
 import site.ashenstation.exception.BadRequestException;
 import site.ashenstation.mapper.ActorMapper;
@@ -81,5 +84,26 @@ public class ActorService {
         appUserResourcePermissionMapper.insert(new AppUserResourcePermission(avatarId, currentUserId, ResourceType.PICTURE));
 
         return true;
+    }
+
+    public List<ActorListByClassifyTagVo> getActorListByClassifyTag() {
+
+        String currentUserId = SecurityUtils.getCurrentUserId();
+
+        return QueryChain.of(actorTagMapper)
+                .select(
+                        ActorTagTableDef.ACTOR_TAG.ID,
+                        ActorTagTableDef.ACTOR_TAG.TITLE,
+                        ActorTableDef.ACTOR.ID,
+                        ActorTableDef.ACTOR.NAME,
+                        ActorTableDef.ACTOR.TAG_ID,
+                        ActorTableDef.ACTOR.INTRODUCTION,
+                        ActorTableDef.ACTOR.AVATAR_URL,
+                        ActorTableDef.ACTOR.CREATOR
+                )
+                .from(ActorTagTableDef.ACTOR_TAG)
+                .leftJoin(ActorTableDef.ACTOR).on(ActorTagTableDef.ACTOR_TAG.ID.eq(ActorTableDef.ACTOR.TAG_ID))
+                .where(ActorTableDef.ACTOR.CREATOR.eq(currentUserId))
+                .listAs(ActorListByClassifyTagVo.class);
     }
 }

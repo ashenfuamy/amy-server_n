@@ -24,4 +24,7 @@ public class AppUserResourcePermission {
         this.userId = userId;
         this.resourceType = resourceType;
     }
+
+    public AppUserResourcePermission() {
+    }
 }
