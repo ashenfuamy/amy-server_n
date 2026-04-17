@@ -9,7 +9,7 @@ import site.ashenstation.abstraction.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-@Table("mda_tag")
-public class Tag extends BaseEntity {
-    private String title;
+@Table("mda_publisher")
+public class MdaPublisher extends BaseEntity {
+    private String name;
 }
