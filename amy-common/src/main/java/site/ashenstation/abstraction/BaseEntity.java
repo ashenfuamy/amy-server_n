@@ -20,11 +20,15 @@ public abstract class BaseEntity {
     private String creator;
 
     public BaseEntity() {
-        String currentUserId = SecurityUtils.getCurrentUserId();
-        if (currentUserId == null)
-            this.creator = "System";
-        else
-            this.creator = SecurityUtils.getCurrentUserId();
-        this.createdAt = new Date();
+        try {
+            String currentUserId = SecurityUtils.getCurrentUserId();
+            if (currentUserId == null)
+                this.creator = "System";
+            else
+                this.creator = SecurityUtils.getCurrentUserId();
+            this.createdAt = new Date();
+        } catch (Exception ignored) {
+        }
     }
 }
+

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import site.ashenstation.app.dto.CreateActorDto;
 import site.ashenstation.app.service.ActorService;
 import site.ashenstation.app.vo.ActorListByClassifyTagVo;
+import site.ashenstation.entity.Actor;
 import site.ashenstation.entity.ActorTag;
 
 import java.util.List;
@@ -33,6 +34,11 @@ public class ActorController {
     @GetMapping("list-by-classify-tag")
     public ResponseEntity<List<ActorListByClassifyTagVo>> getListByClassifyTag() {
         return ResponseEntity.ok(actorService.getActorListByClassifyTag());
+    }
+
+    @GetMapping("/actor-list")
+    public ResponseEntity<List<Actor>> getActorList() {
+        return ResponseEntity.ok(actorService.getActorByCreator());
     }
 
 }

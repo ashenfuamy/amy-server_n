@@ -5,6 +5,22 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 550MB
+  rabbitmq:
+    host: 192.168.31.113
+    port: 5682
+    username: guest       # 默认用户名
+    password: guest       # 默认密码
+    virtual-host: /       # 虚拟主机（默认/）
+    # 生产者确认机制（可选，生产环境建议开启）
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    # 消费者配置
+    listener:
+      simple:
+        acknowledge-mode: manual  # 手动ACK（推荐）
+        retry:
+          enabled: true           # 开启消费者重试
+
 
 ffmpeg:
   ffmpeg-executor-path: D:\workspace\resource\ffmpeg-n8.0-latest-win64-gpl-8.0\bin\ffmpeg.exe

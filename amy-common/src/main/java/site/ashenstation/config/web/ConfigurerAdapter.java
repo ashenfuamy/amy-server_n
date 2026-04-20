@@ -15,6 +15,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import site.ashenstation.converter.ApplicationArchivePlatformConverter;
+import site.ashenstation.converter.MosaicTypeConverter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ConfigurerAdapter implements WebMvcConfigurer {
 
     private final ApplicationArchivePlatformConverter applicationArchivePlatformConverter;
+    private final MosaicTypeConverter MosaicTypeConverter;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -58,5 +60,6 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(applicationArchivePlatformConverter);
+        registry.addConverter(MosaicTypeConverter);
     }
 }

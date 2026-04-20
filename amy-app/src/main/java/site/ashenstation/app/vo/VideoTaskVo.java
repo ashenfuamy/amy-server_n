@@ -1,4 +1,4 @@
-package site.ashenstation.app.dto;
+package site.ashenstation.app.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.ToString;
 
 @Data
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class VideoTranCodingDto {
-    private String TaskId;
-    private String userId;
+@AllArgsConstructor
+public class VideoTaskVo {
+    private String taskId;
+    private Integer currentChunk;
 }

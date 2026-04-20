@@ -9,7 +9,7 @@ import lombok.ToString;
 
 @Data
 @ToString()
-@Table("mda_summary_participants")
+@Table("mda_summary_tag_map")
 public class SummaryTag {
     @Id(keyType = KeyType.Generator, value = KeyGenerators.uuid)
     private String id;

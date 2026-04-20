@@ -2,6 +2,9 @@ package site.ashenstation.app.dto;
 
 import lombok.Data;
 import lombok.ToString;
+import site.ashenstation.entity.MdaVideoTag;
+import site.ashenstation.entity.Summary;
+import site.ashenstation.enums.UploadStatus;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,10 +12,10 @@ import java.util.List;
 @Data
 @ToString
 public class VideoTaskDto implements Serializable {
-    private MdaSummary summary;
-    private List<MdaTag> tags;
+    private Summary summary;
+    private List<MdaVideoTag> tags;
 
-    private List<Integer> actors;
+    private List<String> actors;
 
     private Long size;
     private Integer serialId;

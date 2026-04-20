@@ -106,4 +106,10 @@ public class ActorService {
                 .where(ActorTableDef.ACTOR.CREATOR.eq(currentUserId))
                 .listAs(ActorListByClassifyTagVo.class);
     }
+
+    public List<Actor> getActorByCreator() {
+        String currentUserId = SecurityUtils.getCurrentUserId();
+
+        return actorMapper.selectListByCondition(ActorTableDef.ACTOR.CREATOR.eq(currentUserId));
+    }
 }

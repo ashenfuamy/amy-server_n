@@ -21,5 +21,4 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler(staticResourceProperties.getAvatarResourcePrefix() + "/**").addResourceLocations(avatarUtl);
 
     }
-
 }

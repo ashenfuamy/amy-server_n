@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.web.filter.GenericFilterBean;
 import site.ashenstation.app.service.UserService;
 import site.ashenstation.dto.OnlineUserDto;
 import site.ashenstation.enums.LoginPlatform;
-import site.ashenstation.exception.BadRequestException;
 import site.ashenstation.service.OnlineUserService;
 import site.ashenstation.utils.AmyConstants;
 import site.ashenstation.utils.TokenProvider;
@@ -27,8 +25,6 @@ import site.ashenstation.utils.TokenProvider;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @Configuration
@@ -53,7 +49,7 @@ public class TokenFilter extends GenericFilterBean {
         if (StringUtils.hasText(token)) {
 
             Claims claims = tokenProvider.getClaims(token);
-            String username = claims.get(AmyConstants.JWT_CLAIM_USERNAME, String.class);
+            String userId = claims.get(AmyConstants.JWT_CLAIM_USER_ID, String.class);
 
             String platformVal = claims.get(AmyConstants.JWT_CLAIM_PLATFORM, String.class);
             String loginKey = tokenProvider.loginKey(token, Objects.requireNonNull(LoginPlatform.find(platformVal)));
@@ -61,7 +57,7 @@ public class TokenFilter extends GenericFilterBean {
             OnlineUserDto onlineUserDto = onlineUserService.getOne(loginKey);
 
             if (onlineUserDto != null) {
-                List<GrantedAuthority> resourcePermission = userService.getResourcePermission(username);
+                List<GrantedAuthority> resourcePermission = userService.getResourcePermission(userId);
 
                 User principal = new User(claims.getSubject(), "******", resourcePermission);
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, token, resourcePermission));

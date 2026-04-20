@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ResourceType {
 
-    PICTURE("PICTURE");
+    PICTURE("PICTURE"),
+    VIDEO("video");
 
     private final String type;
 

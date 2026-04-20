@@ -20,4 +20,5 @@ public class Summary extends BaseEntity {
     private String resourceId;
     private MosaicType mosaicType;
     private SummaryType type;
+    private String publisher;
 }

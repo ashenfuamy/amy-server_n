@@ -31,4 +31,14 @@ public class StaticResourceProperties {
         private String name;
         private String path;
     }
+
+    public String getVideoRoot() {
+        for (VideoRootProperties videoRoot : videoRoots) {
+            if (videoRoot.getName().equals(this.enableVideoRoot)) {
+                return videoRoot.getPath();
+            }
+        }
+
+        return null;
+    }
 }

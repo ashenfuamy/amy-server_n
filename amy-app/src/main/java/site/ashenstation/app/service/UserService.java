@@ -47,8 +47,8 @@ public class UserService {
     private final OnlineUserService onlineUserService;
     private final LoginProperties loginProperties;
 
-    public List<GrantedAuthority> getResourcePermission(String username) {
-        String key = securityProperties.getResourcePermissionKey() + username;
+    public List<GrantedAuthority> getResourcePermission(String userId) {
+        String key = securityProperties.getResourcePermissionKey() + userId;
         Set<Object> members = redisUtils.members(key);
 
         List<GrantedAuthority> permissions = new ArrayList<>();
@@ -59,14 +59,15 @@ public class UserService {
             }
         } else {
             List<AppUserResourcePermission> appUserResourcePermissions = appUserResourcePermissionMapper.selectListByCondition(
-                    AppUserResourcePermissionTableDef.APP_USER_RESOURCE_PERMISSION.USER_ID.eq(username)
+                    AppUserResourcePermissionTableDef.APP_USER_RESOURCE_PERMISSION.USER_ID.eq(userId)
             );
 
             appUserResourcePermissions.forEach(i -> {
+                System.out.println(i.getExpireAt() == null || new Date().before(i.getExpireAt()));
                 if (i.getExpireAt() == null || new Date().before(i.getExpireAt())) {
                     String resourceId = i.getResourceId();
                     permissions.add(new SimpleGrantedAuthority(resourceId));
-                    redisUtils.set(key, resourceId);
+                    redisUtils.sSet(key, resourceId);
                 }
             });
         }
