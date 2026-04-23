@@ -50,6 +50,7 @@ public class VideoService {
     private final SummaryMapper summaryMapper;
     private final MdaVideoTagMapper videoTagMapper;
     private final SummaryTagMapper summaryTagMapper;
+
     private final StaticResourceProperties staticResourceProperties;
     private final SummaryParticipantsMapper summaryParticipantsMapper;
     private final AppUserResourcePermissionMapper appUserResourcePermissionMapper;
@@ -251,6 +252,7 @@ public class VideoService {
 
             summaryTagMapper.insertBatch(summaryTags);
 
+
             ArrayList<SummaryParticipants> summaryParticipants = new ArrayList<>();
             List<String> actors = task.getActors();
             actors.forEach(actor -> {
@@ -265,7 +267,6 @@ public class VideoService {
 
             task.setUploadStatus(UploadStatus.FINISH);
 
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 
             ONLINE_SESSIONS.forEach((s, webSocketSession) -> {
                 if (s.startsWith(videoTranCodingDto.getUserId())) {

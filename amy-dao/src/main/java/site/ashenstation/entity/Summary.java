@@ -17,6 +17,7 @@ public class Summary extends BaseEntity {
     private String subtitle;
     private String posterUrl;
     private String posterPath;
+    private String serialNumber;
     private String resourceId;
     private MosaicType mosaicType;
     private SummaryType type;

@@ -10,16 +10,13 @@ spring:
     port: 5682
     username: guest       # 默认用户名
     password: guest       # 默认密码
-    virtual-host: /       # 虚拟主机（默认/）
-    # 生产者确认机制（可选，生产环境建议开启）
-    publisher-confirm-type: correlated
-    publisher-returns: true
-    # 消费者配置
     listener:
       simple:
-        acknowledge-mode: manual  # 手动ACK（推荐）
-        retry:
-          enabled: true           # 开启消费者重试
+        concurrency: 1
+        max-concurrency: 5
+        prefetch: 10
+    stream:
+      virtual-host: /
 
 
 ffmpeg:

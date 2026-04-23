@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import site.ashenstation.app.service.SummaryService;
+import site.ashenstation.app.vo.ActorSummariesVo;
 import site.ashenstation.entity.MdaPublisher;
 import site.ashenstation.entity.MdaVideoTag;
 
@@ -30,4 +31,10 @@ public class SummaryController {
         List<MdaVideoTag> videoTag = summaryService.getVideoTag();
         return ResponseEntity.ok(videoTag);
     }
+
+    @GetMapping("list")
+    public ResponseEntity<List<ActorSummariesVo>> getMdaSummaries(String actorId) {
+        return ResponseEntity.ok(summaryService.getSummaryTagsByActor(actorId));
+    }
+
 }

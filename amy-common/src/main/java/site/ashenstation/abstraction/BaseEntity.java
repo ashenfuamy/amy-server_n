@@ -26,9 +26,10 @@ public abstract class BaseEntity {
                 this.creator = "System";
             else
                 this.creator = SecurityUtils.getCurrentUserId();
-            this.createdAt = new Date();
         } catch (Exception ignored) {
         }
+
+        this.createdAt = new Date();
     }
 }
 
