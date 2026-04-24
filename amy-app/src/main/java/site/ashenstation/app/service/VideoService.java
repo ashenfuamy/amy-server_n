@@ -3,6 +3,7 @@ package site.ashenstation.app.service;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import net.bramp.ffmpeg.progress.Progress;
@@ -20,8 +21,11 @@ import site.ashenstation.app.dto.UploadChunkDto;
 import site.ashenstation.app.dto.VideoTaskDto;
 import site.ashenstation.app.dto.VideoTranCodingDto;
 import site.ashenstation.app.utils.FFmpegUtils;
+import site.ashenstation.app.vo.VideoSummaryVo;
 import site.ashenstation.app.vo.VideoTaskVo;
 import site.ashenstation.entity.*;
+import site.ashenstation.entity.table.SummaryTableDef;
+import site.ashenstation.entity.table.VideoTableDef;
 import site.ashenstation.enums.ResourceType;
 import site.ashenstation.enums.SummaryType;
 import site.ashenstation.enums.UploadStatus;
@@ -58,6 +62,16 @@ public class VideoService {
     private final RabbitTemplate rabbitTemplate;
     private final FFmpegUtils fFmpegUtils;
     private final VideoMapper videoMapper;
+
+    public VideoSummaryVo getDetail(String summaryId) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(SummaryTableDef.SUMMARY.ALL_COLUMNS, VideoTableDef.VIDEO.ALL_COLUMNS)
+                .from(SummaryTableDef.SUMMARY.as("a"))
+                .leftJoin(VideoTableDef.VIDEO).as("b").on(SummaryTableDef.SUMMARY.ID.eq(VideoTableDef.VIDEO.SUMMARY_ID))
+                .where(SummaryTableDef.SUMMARY.ID.eq(summaryId));
+
+        return summaryMapper.selectOneByQueryAs(queryWrapper, VideoSummaryVo.class);
+    }
 
     @UpdateResourceCache
     @Transactional

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import site.ashenstation.app.dto.CreateVideoDto;
 import site.ashenstation.app.dto.UploadChunkDto;
 import site.ashenstation.app.service.VideoService;
+import site.ashenstation.app.vo.VideoSummaryVo;
 import site.ashenstation.app.vo.VideoTaskVo;
 import site.ashenstation.enums.UploadStatus;
 
@@ -39,6 +40,11 @@ public class VideoController {
     private ResponseEntity<Boolean> uploadChunkFinish(String id) {
         videoService.finishUpload(id);
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/detail")
+    private ResponseEntity<VideoSummaryVo> getDetail(String id) {
+        return ResponseEntity.ok(videoService.getDetail(id));
     }
 
 }
